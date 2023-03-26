@@ -2,6 +2,7 @@ import getUser from "@/lib/getUser"
 import getUserPosts from "@/lib/getUserPosts"
 import { User, Post } from "@/types"
 import { Suspense } from "react"
+import { Metadata } from "next"
 
 type Params = {
     params: {
@@ -11,6 +12,16 @@ type Params = {
 
 type Props = {
     promise: Promise<Post[]>
+}
+
+export async function generateMetadata ({params: { userId}}: Params): Promise<Metadata> {
+    const userData: Promise<User> = getUser(userId)
+    const user: User = await userData
+
+    return {
+        title: user.name,
+        description: user.username
+    }
 }
 
 export default async function UserDetail({params: { userId }}: Params) {
